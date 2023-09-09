@@ -6,7 +6,7 @@ import random
 
 cari = input("Masukan Kata Kunci : ")
 
-base_url = 'https://www.lazada.co.id/tag/dslr/?_keyori=ss&ajax=true&catalog_redirect_tag=true&from=input&isFirstRequest=true&page=1&q=dslr&spm=a2o4j.home.search.go.579953e0qcLIT0'
+base_url = 'https://www.lazada.co.id/tag/dslr/?_keyori=ss&ajax=true&catalog_redirect_tag=true&from=input&isFirstRequest=true&page=1&q={cari}&spm=a2o4j.home.search.go.579953e0qcLIT0'
 
 headers = {
 'authority': 'www.lazada.co.id',
