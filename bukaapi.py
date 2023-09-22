@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+import sys, os
 
 cari = input("Masukan Kata Kunci : ")
 url = 'https://api.bukalapak.com/multistrategy-products'
@@ -96,7 +97,13 @@ def scrape_data(param):
     
     
 def save_to_xlsx(df):
-    df.to_excel(f'{cari}_{jlmrow}_bukalapak.xlsx', index=False)
+        subdir = sys.path[0]
+    try:
+        subdir = subdir.replace('\\','/') 
+        os.mkdir(f'{subdir}/DataExcel/') 
+    except FileExistsError:  
+        subdir = f'{subdir}/DataExcel/'
+    df.to_excel(f'{subdir}{cari}_{jlmrow}_bukalapak.xlsx', index=False)
     print(f'Data sudah disimpan di file "{cari}_{jlmrow}_bukalapak.xlsx"')    
     
     

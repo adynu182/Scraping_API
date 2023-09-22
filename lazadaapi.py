@@ -3,10 +3,11 @@ import pandas as pd
 import math
 import time
 import random
+import sys, os
 
 cari = input("Masukan Kata Kunci : ")
 
-base_url = 'https://www.lazada.co.id/tag/dslr/?_keyori=ss&ajax=true&catalog_redirect_tag=true&from=input&isFirstRequest=true&page=1&q={cari}&spm=a2o4j.home.search.go.579953e0qcLIT0'
+base_url = 'https://www.lazada.co.id/tag/dslr/?_keyori=ss&ajax=true&catalog_redirect_tag=true&from=input&isFirstRequest=true&page=1&q={}&spm=a2o4j.home.search.go.579953e0qcLIT0'.format(cari)
 
 headers = {
 'authority': 'www.lazada.co.id',
@@ -66,9 +67,13 @@ def scrape(url):
         else:
             harga_real = harga
             
-        if "itemSoldCntShow" in rows[i]:
+        try:
             item_sold = rows[i]['itemSoldCntShow']
-        else:
+            item_sold = item_sold.replace(' Terjual','')
+            item_sold = item_sold.replace('+','')
+            item_sold = item_sold.replace(',','')
+            item_sold = int(item_sold.replace('k','000'))
+        except:
             item_sold = 0
         
         rating = float(rows[i]['ratingScore'])
@@ -78,19 +83,31 @@ def scrape(url):
         else:
             review = int(rows[i]['review'])
             
+        if rows[i]['itemUrl'] == "":
+            link = 0
+        else:
+            link = rows[i]['itemUrl']
+            link = link.replace('//', '')
+            
         produk_all.append(
-            (toko, lokasi, nama_produk, harga, harga_real, item_sold, rating, review)
+            (toko, lokasi, nama_produk, harga, harga_real, item_sold, rating, review, link)
         )
     return produk_all
 
 
 def data_frame(data):
-    df = pd.DataFrame(data, columns=['nama toko', 'lokasi', 'Nama Barang', 'Harga', 'Harga Real', 'Terjual', 'Rating', 'Review'])
+    df = pd.DataFrame(data, columns=['nama toko', 'lokasi', 'Nama Barang', 'Harga', 'Harga Real', 'Terjual', 'Rating', 'Review', 'Link'])
     return df
 
 
 def save_to_xlsx(df):
-    df.to_excel(f'{cari}_{jlmrow}_Lazada.xlsx', index=False)
+    subdir = sys.path[0]
+    try:
+        subdir = subdir.replace('\\','/') 
+        os.mkdir(f'{subdir}/DataExcel/') 
+    except FileExistsError:  
+        subdir = f'{subdir}/DataExcel/'
+    df.to_excel(f'{subdir}{cari}_{jlmrow}_Lazada.xlsx', index=False)
     print(f'Data sudah disimpan di file "{cari}_{jlmrow}_Lazada.xlsx"')
 
 if __name__ == '__main__':

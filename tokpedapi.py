@@ -135,7 +135,11 @@ def scrape_data(param):
     
 def save_to_xlsx(df):
     subdir = sys.path[0]
-    subdir = f'{subdir}/DataExcel/'
+    try:
+        subdir = subdir.replace('\\','/') 
+        os.mkdir(f'{subdir}/DataExcel/') 
+    except FileExistsError:  
+        subdir = f'{subdir}/DataExcel/'
     df.to_excel(f'{subdir}{cari}_{jlmrow}_tokopedia.xlsx', index=False)
     print(f'Data sudah disimpan di file "{cari}_{jlmrow}_Tokopedia.xlsx"')
 

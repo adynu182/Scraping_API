@@ -262,7 +262,11 @@ def job_detail(id):
 
 def save_to_xlsx(df):
     subdir = sys.path[0]
-    subdir = f'{subdir}/DataExcel/'
+    try:
+        subdir = subdir.replace('\\','/') 
+        os.mkdir(f'{subdir}/DataExcel/') 
+    except FileExistsError:  
+        subdir = f'{subdir}/DataExcel/'
     wkt = time.localtime()
     wkt = time.strftime("(%d-%m-%y, %H.%M.%S)", wkt)
     print(wkt)

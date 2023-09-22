@@ -1,6 +1,7 @@
 import requests
 import json
 import pandas as pd
+import sys, os
 
 cari = input("Masukan Kata Kunci : ")
 
@@ -64,7 +65,13 @@ def get_dataframe(products):
     return pd.DataFrame(products, columns=['Nama produk', 'Harga', 'Rating', 'Toko', 'Terjual', 'Jml Review', 'Link Produk', 'Lokasi'])
 
 def save_to_xlsx(df):
-    df.to_excel(f'{cari}_{jlmrow}_jakmall.xlsx', index=False)
+    subdir = sys.path[0]
+    try:
+        subdir = subdir.replace('\\','/') 
+        os.mkdir(f'{subdir}/DataExcel/') 
+    except FileExistsError:  
+        subdir = f'{subdir}/DataExcel/'
+    df.to_excel(f'{subdir}{cari}_{jlmrow}_jakmall.xlsx', index=False)
     print(f'Data sudah disimpan di file "{cari}_{jlmrow}_jakmall.xlsx"')
     
 if __name__ == '__main__':
